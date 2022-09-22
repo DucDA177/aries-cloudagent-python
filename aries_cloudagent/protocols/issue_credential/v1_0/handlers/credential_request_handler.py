@@ -46,6 +46,16 @@ class CredentialRequestHandler(BaseHandler):
         oob_processor = context.inject(OobMessageProcessor)
         oob_record = await oob_processor.find_oob_record_for_inbound_message(context)
 
+        if not context.connection_record:
+            raise HandlerException(
+                "No connection_record"
+            )
+
+        if not oob_record:
+            raise HandlerException(
+                "No oob_record"
+            )
+            
         # Either connection or oob context must be present
         if not context.connection_record and not oob_record:
             raise HandlerException(
